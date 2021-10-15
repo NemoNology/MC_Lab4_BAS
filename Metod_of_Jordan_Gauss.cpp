@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <iomanip>
 #include <exception>
 
@@ -19,35 +19,49 @@ void Show_matr(double** p, unsigned n, unsigned m) {
 }
 
 
-// 1-ый шаг метода Жаргана-Гаусса - проверка на a[k][k] == 0
-void step1(double** p, unsigned k, unsigned n, unsigned m) {
+
+// 0-ой шаг - "Проверка ранга" матрицы
+bool step0(double** p, unsigned k, unsigned n, unsigned m) {
 
 
-    double temp;
+    for (unsigned i = k; i < n; i++) { // Проверяем элементы под p[k][k], 
+                            //чтобы знать, возможно ли поменять строки местами
+        if (p[i][k] != 0) {
 
-        for (unsigned j = k; j < n; j++) {
-            if (p[k][k] == 0) {
-                for (unsigned i = k + 1; i < n; i++) {
-                    if (p[i][k] != 0) {
+            return i; // Останавливаемся, если "ранг" матрицы не нулевой
 
-                        for (unsigned q = 0; q < m; q++) {
-
-                            temp = p[k][q];
-                            p[k][q] = p[k + i][q];
-                            p[k + i][q] = temp;
-
-                        }
-
-                        break;
-
-                    }
-                }
-
-                throw domain_error("Ранг матрицы равен 0");
-            }
-            break;
         }
     }
+
+    // Бросаем ошибку, если ранг матрицы равен 0
+    throw domain_error("Ранг матрицы равен 0"); 
+
+}
+
+
+// 
+
+// 1-ый шаг метода Жаргана-Гаусса - перестановка строки a[k][k] с не нулевой строкой
+void step1(double** p, unsigned k, unsigned n, unsigned m, unsigned line) {
+
+    if (line == k) { // Проверка на то, нужно ли вообще менять строку...
+        return;
+    }
+
+    double temp; // Создание переменной для перестановки местами элемонтов в строках...
+
+
+    for (unsigned i = k; i < n; i++) {
+        for (unsigned j = 0; j < m; j++) {
+
+            temp = p[k][j];
+            p[k][j] = p[line][j];
+            p[line][j] = temp;
+
+        }
+    }
+
+}
 
 
 // 2-ой шаг метода Жаргана-Гаусса - вычисление a[i][j], при i != k & j > k & "Обнуление" элементов под a[k][k] 
@@ -96,18 +110,20 @@ void Jordan_Gauss_L3(double** aop, const unsigned n, const unsigned m) {
     // Вывод изначальной матрицы
     cout << "Изначальная матрица:";
     Show_matr(aop, n, m);
+    unsigned line = 0;
 
     // Сообственно сам метод:
     for (unsigned k = 0; k < n; k++) {
 
-        try { step1(aop, k, n, m); }
+        try { line = step0(aop, k, n, m) + 1; } // Проверяем "ранг" матрицы
 
-        catch (domain_error e) {
+        catch (domain_error e) { // Ловим ошибку, если ранг матрицы равен 0
 
             cout << "\nМатрица не соответсвует условиям: ранг равен 0!\n";
             break;
 
         }
+        step1(aop, k, n, m, line);
         step2(aop, k, n, m);
         step3(aop, k, n, m);
         step4(aop, k, n, m);
