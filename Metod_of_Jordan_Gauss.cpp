@@ -1,5 +1,6 @@
-﻿#include <iostream>
+#include <iostream>
 #include <iomanip>
+#include <exception>
 
 
 using namespace std;
@@ -8,9 +9,9 @@ using namespace std;
 void Show_matr(double** p, unsigned n, unsigned m) {
     cout << "\n\n";
     for (unsigned i = 0; i < n; i++) {
-        cout << "\t" << "|";
+        cout << "\t";
         for (unsigned j = 0; j < m; j++) {
-            cout << setw(12) << setprecision(8) << p[i][j] << "|";
+            cout << setw(14) << setprecision(8) << p[i][j];
         }
         cout << endl;
     }
@@ -41,7 +42,8 @@ void step1(double** p, unsigned k, unsigned n, unsigned m) {
 
                     }
                 }
-                break;
+
+                throw domain_error("Ранг матрицы равен 0");
             }
             break;
         }
@@ -89,7 +91,7 @@ void step4(double** p, unsigned k, unsigned n, unsigned m) {
 
 
 // Метод Жордана-Гаусса в виде модуля, состоящего из множества функций (Шагов)
-void Jordan_Gauss(double** aop, const unsigned n, const unsigned m) {
+void Jordan_Gauss_L3(double** aop, const unsigned n, const unsigned m) {
 
     // Вывод изначальной матрицы
     cout << "Изначальная матрица:";
@@ -98,7 +100,14 @@ void Jordan_Gauss(double** aop, const unsigned n, const unsigned m) {
     // Сообственно сам метод:
     for (unsigned k = 0; k < n; k++) {
 
-        step1(aop, k, n, m);
+        try { step1(aop, k, n, m); }
+
+        catch (domain_error e) {
+
+            cout << "\nМатрица не соответсвует условиям: ранг равен 0!\n";
+            break;
+
+        }
         step2(aop, k, n, m);
         step3(aop, k, n, m);
         step4(aop, k, n, m);
