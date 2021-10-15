@@ -46,7 +46,7 @@ int main()
     // Вызов метода
     cout << "\n" << setw(65) << "Метод Жордана-Гаусса: 3-я Лаб.\n";
     Long_libe();
-    Jordan_Gauss(aop, n, m);
+    Jordan_Gauss_L3(aop, n, m);
     Long_libe();
 
 
