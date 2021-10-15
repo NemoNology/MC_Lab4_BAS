@@ -1,17 +1,19 @@
 ﻿#include <iostream>
 #include <iomanip>
-//#include "Metod_of_Jordan_Gauss.h"
+#include "Metod_of_Jordan_Gauss.h"
 
 
 using namespace std;
 
 void Long_libe() {
 
-    for (unsigned i = 0; i <= 10; i++) {
+    for (unsigned i = 0; i < 10; i++) {
 
-        cout << "----------";
+        cout << "-----------";
 
     }
+    
+    cout << "\n\n";
 
 }
 
@@ -42,9 +44,10 @@ int main()
 
 
     // Вызов метода
-    cout << "\n\t\tМетод Жордана-Гаусса\n";
+    cout << "\n" << setw(65) << "Метод Жордана-Гаусса: 3-я Лаб.\n";
     Long_libe();
-    //Jordan_Gauss(aop, n, m);
+    Jordan_Gauss(aop, n, m);
+    Long_libe();
 
 
     system("pause"); // Окончание программы
