@@ -43,9 +43,12 @@ void Generate_Random_2D_Arr(vector<vector<double>>& a) {
         a[i][i] = (rand() % 200 - 100.0) / 100; // c[i][j] - диагональ
 
         if (i + 1 < a.size()) {
+
             a[i + 1][i] = (rand() % 200 - 100.0) / 100; // a[i][j]
             a[i][i + 1] = (rand() % 202 - 100.0) / 100; // b[i][j]
+
         }
+
         
         
     }
@@ -58,19 +61,19 @@ void Generate_Random_2D_Arr(vector<vector<double>>& a) {
 vector<double> CM_Method_Lab4(const vector<vector<double>>& a) {
 
     // Инициальзация вектора для сохранения значения коэф-ов
-    vector <double> alpha(a.size()); // Коэф-ци альфа
-    vector <double> beta(a.size()); // Коэф-ци бета
+    vector <double> alpha(a.size() + 1); // Коэф-ци альфа
+    vector <double> beta(a.size() + 1); // Коэф-ци бета
 
 
     // Вычисление коэф-ов альфа & бета:
-    alpha[0] = -a[0][1] / a[0][0];
-    beta[0] = a[0][a.size()] / a[0][0];
+    alpha[1] = -a[0][1] / a[0][0];
+    beta[1] = a[0][a.size()] / a[0][0];
 
 
-    for (unsigned short i = 0; i < a.size() - 1; i++) {
+    for (unsigned short i = 1; i <= a.size() - 1; i++) {
 
-        alpha[i + 1] = -a[i][i + 1] / (a[i][i] + (alpha[i] * a[i + 1][i]));
-        beta[i + 1] = (a[i][a.size()] - (a[i + 1][i] * beta[i])) / (a[i][i] + (alpha[i] * a[i + 1][i]));
+        alpha[i + 1] = -a[i][i + 1] / (a[i][i] + (alpha[i] * a[i][i-1]));
+        beta[i + 1] = (a[i][a.size()] - (a[i][i-1] * beta[i])) / (a[i][i] + (alpha[i] * a[i][i-1]));
 
     }
 
@@ -80,8 +83,8 @@ vector<double> CM_Method_Lab4(const vector<vector<double>>& a) {
     // Обратный ход алгоритма
     // Вычисление x[n]
     // Разделяю числитель и знаменатель формулы x[n] для своего удобства
-    x[1] = a[a.size() - 1][a.size()] - (a[a.size() - 1][a.size() - 2] * beta[a.size() - 1]);
-    x[2] = a[a.size() - 1][a.size() - 1] + (a[a.size() - 1][a.size() - 2] * alpha[a.size() - 1]);
+    x[1] = a[a.size() - 1][a.size()] - (a[a.size() - 1][a.size() - 2] * beta[a.size()]);
+    x[2] = a[a.size() - 1][a.size() - 1] + (a[a.size() - 1][a.size() - 2] * alpha[a.size()]);
 
     x[a.size() - 1] = x[1] / x[2];
 
@@ -114,14 +117,6 @@ int main()
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0} };
 
-    /*
-    {
-    {0.42, -0.72, 0.02, -0.28, 0.2, 0.66},
-    {-0.67, 0.17, -0.86, 0.88, -0.88, 0.53},
-    {0.14, -0.11, 0.86, -0.61, 0.61, 0.32},
-    {0.83, -0.97, -0.29, -0.66, 0.7, -0.88},
-    {0.91, -0.04, -0.41, -0.24, 0.09, 0.66} };
-    */
 
     // ##############################################################
 
