@@ -26,7 +26,7 @@ void Show_1D_Arr(const vector<double>& a) {
     cout << "\n\n";
     for (unsigned short i = 0; i < a.size(); i++) {
 
-        cout << setprecision(7) << "\t" << a[i] << "\n";
+        cout << setprecision(8) << "\t" << a[i] << "\n";
 
     }
     cout << "\n\n";
@@ -49,20 +49,20 @@ void Generate_Random_2D_Arr(vector<vector<double>>& a) {
 
         }
 
-        
-        
+
+
     }
 
 }
 
 // ###################################################################################################################################
 
-// 1-ый шаг метода прогонки решения трёхдиагональных СЛАУ (МПР) - Вычисление коэффицентов
+// Метод прогонки решения трёхдиагональных СЛАУ (МПР) - Вычисление коэффицентов
 vector<double> CM_Method_Lab4(const vector<vector<double>>& a) {
 
     // Инициальзация вектора для сохранения значения коэф-ов
-    vector <double> alpha(a.size() + 1); // Коэф-ци альфа
-    vector <double> beta(a.size() + 1); // Коэф-ци бета
+    vector <double> alpha(a.size()); // Коэф-ци альфа
+    vector <double> beta(a.size()); // Коэф-ци бета
 
 
     // Вычисление коэф-ов альфа & бета:
@@ -70,12 +70,13 @@ vector<double> CM_Method_Lab4(const vector<vector<double>>& a) {
     beta[1] = a[0][a.size()] / a[0][0];
 
 
-    for (unsigned short i = 1; i <= a.size() - 1; i++) {
+    for (unsigned short i = 1; i <= a.size() - 2; i++) {
 
-        alpha[i + 1] = -a[i][i + 1] / (a[i][i] + (alpha[i] * a[i][i-1]));
-        beta[i + 1] = (a[i][a.size()] - (a[i][i-1] * beta[i])) / (a[i][i] + (alpha[i] * a[i][i-1]));
+        alpha[i + 1] = -a[i][i + 1] / (a[i][i] + (alpha[i] * a[i][i - 1]));
+        beta[i + 1] = (a[i][a.size()] - (a[i][i - 1] * beta[i])) / (a[i][i] + (alpha[i] * a[i][i - 1]));
 
     }
+
 
     // Инициальзация вектора для сохранения значения x - результатов метода\решения
     vector <double> x(a.size());
@@ -83,19 +84,21 @@ vector<double> CM_Method_Lab4(const vector<vector<double>>& a) {
     // Обратный ход алгоритма
     // Вычисление x[n]
     // Разделяю числитель и знаменатель формулы x[n] для своего удобства
-    x[1] = a[a.size() - 1][a.size()] - (a[a.size() - 1][a.size() - 2] * beta[a.size()]);
-    x[2] = a[a.size() - 1][a.size() - 1] + (a[a.size() - 1][a.size() - 2] * alpha[a.size()]);
+
+   
+    x[1] = a[a.size() - 1][a.size()] - (a[a.size() - 1][a.size() - 2] * beta[a.size() - 1]);
+    x[2] = a[a.size() - 1][a.size() - 1] + (a[a.size() - 1][a.size() - 2] * alpha[a.size() - 1]);
 
     x[a.size() - 1] = x[1] / x[2];
 
+    
+
     // Вычисление x[i] (i < n)
-    for (unsigned short i = a.size() - 2; i > 0; i--) {
+    for (short i = a.size() - 2; i >= 0; i--) {
 
         x[i] = alpha[i + 1] * x[i + 1] + beta[i + 1];
 
     }
-
-    x[0] = x[1] * alpha[1] + beta[1];
 
 
     return x; // Возвращаем 1D матрицу х - матрицу результатов решения
